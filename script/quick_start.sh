@@ -22,7 +22,7 @@ BISTOURY_PROXY_CONF_FILE="$BISTOURY_TMP_DIR/proxy.conf"
 LOCAL_IP=`/sbin/ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:"|tail -1`
 
 start(){
-
+    # 初始化h2
     cd $H2_DATABASE_DIR
     ./h2.sh -j $2 -i $LOCAL_IP -l $APP_LOG_DIR start
     sleep 5
@@ -32,6 +32,7 @@ start(){
     #等待proxy启动
     sleep 5
 
+    # 启动agent
     cd $BISTOURY_AGENT_BIN_DIR
     if [[ -n $BISTOURY_AGENT_APP_LIB_CLASS ]]; then
         ./bistoury-agent.sh -p $1 -i $LOCAL_IP -j $2 -c "$BISTOURY_AGENT_APP_LIB_CLASS" start
